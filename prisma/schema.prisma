@@ -1,0 +1,403 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  RESEARCHER
+  VIEWER
+}
+
+enum AgencyType {
+  GOVERNMENT
+  COMMERCIAL
+  INTERNATIONAL
+  UNIVERSITY
+}
+
+enum CompanyType {
+  PRIVATE
+  PUBLIC
+  STATE_OWNED
+  NON_PROFIT
+}
+
+enum MissionStatus {
+  PLANNED
+  ACTIVE
+  SUCCESS
+  FAILURE
+  PARTIAL
+}
+
+enum CrewRole {
+  COMMANDER
+  PILOT
+  MISSION_SPECIALIST
+  PAYLOAD_SPECIALIST
+  FLIGHT_ENGINEER
+  TOURIST
+}
+
+enum PayloadType {
+  SATELLITE
+  PROBE
+  CARGO
+  CREW_MODULE
+  SCIENTIFIC_PACKAGE
+  TECHNOLOGY_DEMONSTRATOR
+}
+
+enum OrbitType {
+  LEO
+  MEO
+  GEO
+  HEO
+  POLAR
+  SSO
+  LUNAR
+  SOLAR
+  SUBORBITAL
+  INTERPLANETARY
+  UNKNOWN
+}
+
+enum EventType {
+  LAUNCH
+  STAGE_SEPARATION
+  ORBIT_INSERTION
+  DOCKING
+  LANDING
+  DEPLOYMENT
+  ANOMALY
+  SCIENCE_OPERATION
+  COMMUNICATION
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+}
+
+model User {
+  id           String     @id @default(cuid())
+  name         String?
+  email        String     @unique
+  passwordHash String
+  role         Role       @default(VIEWER)
+  auditLogs    AuditLog[] @relation("AuditActor")
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Agency {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  acronym     String?      @unique
+  type        AgencyType   @default(GOVERNMENT)
+  country     String
+  website     String?
+  foundedYear Int?
+  description String?
+  missions    Mission[]
+  launchSites LaunchSite[]
+  astronauts  Astronaut[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([country])
+}
+
+model Company {
+  id          String          @id @default(cuid())
+  name        String          @unique
+  ticker      String?
+  type        CompanyType     @default(PRIVATE)
+  country     String
+  website     String?
+  foundedYear Int?
+  description String?
+  missions    Mission[]
+  rockets     Rocket[]
+  vehicles    LaunchVehicle[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([country])
+}
+
+model Rocket {
+  id              String          @id @default(cuid())
+  name            String          @unique
+  manufacturer    String
+  country         String
+  active          Boolean         @default(true)
+  reusable        Boolean         @default(false)
+  firstFlightYear Int?
+  payloadLeoKg    Int?
+  payloadGtoKg    Int?
+  companyId       String?
+  company         Company?        @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  launchVehicles  LaunchVehicle[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([manufacturer])
+  @@index([active])
+}
+
+model LaunchVehicle {
+  id           String    @id @default(cuid())
+  name         String
+  variant      String?
+  serialNumber String?
+  reusable     Boolean   @default(false)
+  rocketId     String
+  rocket       Rocket    @relation(fields: [rocketId], references: [id], onDelete: Cascade)
+  operatorId   String?
+  operator     Company?  @relation(fields: [operatorId], references: [id], onDelete: SetNull)
+  missions     Mission[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([name, serialNumber])
+  @@index([rocketId])
+}
+
+model LaunchSite {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  code      String?   @unique
+  country   String
+  region    String?
+  latitude  Float
+  longitude Float
+  agencyId  String?
+  agency    Agency?   @relation(fields: [agencyId], references: [id], onDelete: SetNull)
+  missions  Mission[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([country])
+}
+
+model Orbit {
+  id             String      @id @default(cuid())
+  name           String      @unique
+  type           OrbitType
+  inclinationDeg Float?
+  apogeeKm       Int?
+  perigeeKm      Int?
+  periodMinutes  Float?
+  missions       Mission[]
+  satellites     Satellite[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([type])
+}
+
+model Mission {
+  id              String                 @id @default(cuid())
+  name            String
+  slug            String                 @unique
+  program         String?
+  description     String?
+  objective       String?
+  destination     String
+  status          MissionStatus          @default(PLANNED)
+  launchDate      DateTime?
+  endDate         DateTime?
+  costUsdMillions Float?
+  agencyId        String?
+  agency          Agency?                @relation(fields: [agencyId], references: [id], onDelete: SetNull)
+  companyId       String?
+  company         Company?               @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  launchVehicleId String
+  launchVehicle   LaunchVehicle          @relation(fields: [launchVehicleId], references: [id], onDelete: Restrict)
+  launchSiteId    String
+  launchSite      LaunchSite             @relation(fields: [launchSiteId], references: [id], onDelete: Restrict)
+  orbitId         String?
+  orbit           Orbit?                 @relation(fields: [orbitId], references: [id], onDelete: SetNull)
+  crew            MissionCrew[]
+  payloads        Payload[]
+  events          MissionEvent[]
+  failureReports  FailureReport[]
+  instruments     ScientificInstrument[]
+  telemetry       TelemetrySummary?
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+
+  @@index([status])
+  @@index([launchDate])
+  @@index([destination])
+  @@index([agencyId])
+  @@index([companyId])
+  @@index([launchVehicleId])
+  @@index([launchSiteId])
+  @@index([orbitId])
+}
+
+model Astronaut {
+  id          String        @id @default(cuid())
+  name        String
+  nationality String
+  agencyId    String?
+  agency      Agency?       @relation(fields: [agencyId], references: [id], onDelete: SetNull)
+  bio         String?
+  status      String        @default("Active")
+  flights     Int           @default(0)
+  evaHours    Float         @default(0)
+  birthDate   DateTime?
+  crew        MissionCrew[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([nationality])
+  @@index([agencyId])
+}
+
+model MissionCrew {
+  id          String    @id @default(cuid())
+  missionId   String
+  astronautId String
+  role        CrewRole
+  seat        String?
+  mission     Mission   @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  astronaut   Astronaut @relation(fields: [astronautId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+
+  @@unique([missionId, astronautId])
+  @@index([astronautId])
+}
+
+model Payload {
+  id          String                 @id @default(cuid())
+  name        String
+  type        PayloadType
+  massKg      Float?
+  customer    String?
+  purpose     String?
+  missionId   String
+  mission     Mission                @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  satellite   Satellite?
+  instruments ScientificInstrument[]
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+
+  @@index([type])
+  @@index([missionId])
+}
+
+model Satellite {
+  id          String                 @id @default(cuid())
+  name        String                 @unique
+  noradId     Int?                   @unique
+  bus         String?
+  operator    String?
+  massKg      Float?
+  payloadId   String                 @unique
+  payload     Payload                @relation(fields: [payloadId], references: [id], onDelete: Cascade)
+  orbitId     String?
+  orbit       Orbit?                 @relation(fields: [orbitId], references: [id], onDelete: SetNull)
+  instruments ScientificInstrument[]
+  operational Boolean                @default(true)
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+
+  @@index([operator])
+  @@index([orbitId])
+}
+
+model MissionEvent {
+  id         String    @id @default(cuid())
+  missionId  String
+  mission    Mission   @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  type       EventType
+  title      String
+  occurredAt DateTime
+  summary    String?
+  sequence   Int       @default(0)
+  createdAt  DateTime  @default(now())
+
+  @@index([missionId, occurredAt])
+  @@index([type])
+}
+
+model FailureReport {
+  id             String   @id @default(cuid())
+  missionId      String
+  mission        Mission  @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  phase          String
+  rootCause      String
+  impact         String
+  correctivePlan String?
+  severity       Int      @default(3)
+  reportedAt     DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([missionId])
+  @@index([severity])
+}
+
+model ScientificInstrument {
+  id                    String     @id @default(cuid())
+  name                  String
+  instrumentType        String
+  description           String?
+  principalInvestigator String?
+  missionId             String?
+  mission               Mission?   @relation(fields: [missionId], references: [id], onDelete: SetNull)
+  payloadId             String?
+  payload               Payload?   @relation(fields: [payloadId], references: [id], onDelete: SetNull)
+  satelliteId           String?
+  satellite             Satellite? @relation(fields: [satelliteId], references: [id], onDelete: SetNull)
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
+
+  @@index([instrumentType])
+  @@index([missionId])
+  @@index([payloadId])
+  @@index([satelliteId])
+}
+
+model TelemetrySummary {
+  id                 String    @id @default(cuid())
+  missionId          String    @unique
+  mission            Mission   @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  maxAltitudeKm      Float?
+  maxVelocityKps     Float?
+  downlinkGb         Float?
+  signalAvailability Float?
+  thermalStatus      String?
+  powerStatus        String?
+  propulsionStatus   String?
+  lastContactAt      DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+model AuditLog {
+  id        String      @id @default(cuid())
+  action    AuditAction
+  entity    String
+  entityId  String?
+  before    Json?
+  after     Json?
+  actorId   String?
+  actor     User?       @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+  ipAddress String?
+  createdAt DateTime    @default(now())
+
+  @@index([entity, entityId])
+  @@index([actorId])
+  @@index([createdAt])
+}
