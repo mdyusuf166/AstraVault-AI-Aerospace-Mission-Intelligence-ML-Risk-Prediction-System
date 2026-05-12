@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 import joblib
+import numpy as np
 import pandas as pd
 
 from train import DATA_PATH, METADATA_PATH, MISSION_MODEL_PATH, ROCKET_MODEL_PATH, train

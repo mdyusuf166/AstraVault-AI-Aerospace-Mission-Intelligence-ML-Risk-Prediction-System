@@ -1,0 +1,35 @@
+{
+  "modelVersion": "astravault-ml-1.0.0",
+  "trainedAt": "2026-05-12T15:49:51.312890+00:00",
+  "trainingSamples": 22,
+  "missionSuccess": {
+    "accuracy": 0.5,
+    "precision": 0.6667,
+    "recall": 0.5,
+    "f1Score": 0.5714,
+    "features": [
+      "rocket_reliability",
+      "organization_experience",
+      "launch_vehicle_history",
+      "payload_mass_kg",
+      "previous_failures",
+      "launch_site_history",
+      "crewed",
+      "total_launches",
+      "successful_launches",
+      "failed_launches",
+      "partial_failures",
+      "orbit_type",
+      "mission_type",
+      "destination",
+      "budget_level",
+      "reliability_priority"
+    ],
+    "algorithm": "RandomForestClassifier",
+    "artifact": "E:\\yousuf\\web\\university\\arodatabase\\ml-service\\models\\mission_success_model.pkl"
+  },
+  "rocketReliability": {
+    "artifact": "E:\\yousuf\\web\\university\\arodatabase\\ml-service\\models\\rocket_reliability_model.pkl",
+    "algorithm": "RandomForestRegressor"
+  }
+}
