@@ -1,15 +1,20 @@
 # dependencies
-/node_modules
+node_modules/
+ml-service/venv/
+ml-service/.venv/
+__pycache__/
+*.pyc
 
 # next
-/.next
-/out
+.next/
+out/
 
 # production
-/build
+build/
 
 # prisma
-/prisma/*.db
+prisma/*.db
+web/prisma/*.db
 
 # misc
 .DS_Store

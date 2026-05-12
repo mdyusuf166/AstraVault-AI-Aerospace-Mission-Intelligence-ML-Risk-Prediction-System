@@ -1,31 +1,44 @@
 # AstraVault ML Service
 
-FastAPI service for mission success prediction, rocket reliability scoring, failure pattern analysis, launch vehicle recommendation, and risk explanation.
+Production-oriented FastAPI service for aerospace mission intelligence.
 
-## Run Locally
+## Stack
+
+- Anaconda environment: `astravault-ml`
+- Python 3.11
+- FastAPI + Uvicorn
+- Pandas, NumPy
+- Scikit-learn RandomForest
+- Optional XGBoost classifier when installed
+- Joblib model artifacts
+- Matplotlib/Seaborn/Jupyter for internal analysis
+
+## Commands
 
 ```bash
-cd ml-service
-python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
+conda env create -f environment.yml
+conda activate astravault-ml
 python train.py
 uvicorn main:app --reload --port 8000
 ```
 
-On macOS/Linux, activate with:
-
-```bash
-source venv/bin/activate
-```
-
-The service reads `DATABASE_URL` from the project root `.env`. If PostgreSQL is unavailable, `train.py` creates a development model from bundled seed-like mission examples so the API can still boot.
+The service runs at `http://localhost:8000`.
 
 ## Endpoints
 
+- `GET /`
 - `POST /predict-mission-success`
-- `GET /rocket-reliability/{rocketId}`
-- `POST /recommend-launch-vehicle`
+- `POST /rocket-reliability`
 - `GET /failure-patterns`
+- `POST /recommend-launch-vehicle`
 - `POST /mission-risk-analysis`
-- `GET /health`
+- `POST /train`
+- `GET /model-info`
+
+## Artifacts
+
+- `models/mission_success_model.pkl`
+- `models/rocket_reliability_model.pkl`
+- `models/model_metadata.json`
+
+Training data lives at `data/missions.csv`. The dataset is synthetic but realistic and can be replaced or expanded with real mission rows.

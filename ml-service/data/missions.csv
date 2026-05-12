@@ -1,0 +1,23 @@
+mission_name,rocket_name,organization,organization_experience,launch_vehicle_history,total_launches,successful_launches,failed_launches,partial_failures,payload_mass_kg,orbit_type,mission_type,destination,previous_failures,launch_site_success_rate,crewed,budget_level,reliability_priority,status,failure_category
+Apollo 11,Saturn V,NASA,0.95,0.92,13,12,0,1,49390,LUNAR,CREWED_EXPLORATION,Moon,0,0.91,1,HIGH,HIGH,SUCCESS,
+Artemis I,SLS,NASA,0.88,0.78,1,1,0,0,26000,LUNAR,TEST_FLIGHT,Moon,0,0.89,0,HIGH,HIGH,SUCCESS,
+Crew Dragon Demo-2,Falcon 9,NASA/SpaceX,0.86,0.94,240,232,2,6,12520,LEO,CREW_TRANSPORT,International Space Station,0,0.92,1,MEDIUM,HIGH,SUCCESS,
+SpaceX Crew-1,Falcon 9,NASA/SpaceX,0.9,0.95,250,241,2,7,12520,LEO,CREW_TRANSPORT,International Space Station,0,0.93,1,MEDIUM,HIGH,SUCCESS,
+SpaceX CRS-21,Falcon 9,NASA/SpaceX,0.88,0.95,252,243,2,7,2972,LEO,CARGO,International Space Station,0,0.93,0,MEDIUM,HIGH,SUCCESS,
+SpaceX CRS-25,Falcon 9,NASA/SpaceX,0.9,0.96,270,260,2,8,2630,LEO,CARGO,International Space Station,0,0.94,0,MEDIUM,HIGH,SUCCESS,
+Falcon Heavy Test Flight,Falcon Heavy,SpaceX,0.74,0.82,1,1,0,0,1250,SOLAR,TEST_FLIGHT,Heliocentric Orbit,0,0.91,0,MEDIUM,MEDIUM,SUCCESS,
+James Webb Space Telescope,Ariane 5,NASA/ESA/Arianespace,0.91,0.95,112,107,2,3,6161,SOLAR,SCIENCE,Sun-Earth L2,0,0.94,0,HIGH,HIGH,SUCCESS,
+Chandrayaan-3,LVM3,ISRO,0.82,0.86,7,6,1,0,3900,LUNAR,LANDER,Moon,1,0.82,0,LOW,HIGH,SUCCESS,
+CAPSTONE,Electron,NASA/Rocket Lab,0.73,0.83,27,24,3,0,25,LUNAR,TECH_DEMO,Moon,0,0.84,0,LOW,MEDIUM,SUCCESS,
+New Shepard NS-23,New Shepard,Blue Origin,0.7,0.82,23,22,1,0,36,SUBORBITAL,SCIENCE,Suborbital Space,0,0.8,0,LOW,MEDIUM,FAILURE,engine failure
+Starship Integrated Flight Test 1,Starship,SpaceX,0.76,0.25,1,0,1,0,0,SUBORBITAL,TEST_FLIGHT,Suborbital Space,1,0.45,0,MEDIUM,LOW,FAILURE,staging failure
+Starship Integrated Flight Test 2,Starship,SpaceX,0.78,0.35,2,0,1,1,0,SUBORBITAL,TEST_FLIGHT,Suborbital Space,1,0.55,0,MEDIUM,LOW,PARTIAL,staging failure
+Starship Integrated Flight Test 3,Starship,SpaceX,0.8,0.45,3,0,1,2,0,SUBORBITAL,TEST_FLIGHT,Suborbital Space,2,0.62,0,MEDIUM,LOW,PARTIAL,communication failure
+Mars Climate Orbiter,Delta II,NASA,0.83,0.9,98,96,2,0,638,INTERPLANETARY,SCIENCE,Mars,0,0.89,0,MEDIUM,HIGH,FAILURE,guidance failure
+Mars Polar Lander,Delta II,NASA,0.82,0.9,99,96,3,0,583,INTERPLANETARY,LANDER,Mars,0,0.89,0,MEDIUM,HIGH,FAILURE,landing failure
+OrbitSat GEO-1,Falcon 9,Commercial Operator,0.62,0.94,260,252,2,6,5400,GEO,SATELLITE_DEPLOYMENT,Geostationary Orbit,0,0.92,0,MEDIUM,HIGH,SUCCESS,
+WeatherEye Polar,Electron,Research Consortium,0.58,0.82,28,25,3,0,180,SSO,SATELLITE_DEPLOYMENT,Sun-Synchronous Orbit,0,0.84,0,LOW,MEDIUM,SUCCESS,
+Cargo Tug Demo,New Glenn,Blue Origin,0.61,0.5,0,0,0,0,12000,LEO,TEST_FLIGHT,Low Earth Orbit,0,0.75,0,MEDIUM,MEDIUM,PARTIAL,orbital insertion failure
+Lunar Cargo Pathfinder,Vulcan Centaur,Commercial Operator,0.65,0.72,2,2,0,0,2200,LUNAR,CARGO,Moon,0,0.8,0,MEDIUM,HIGH,SUCCESS,
+Comms Relay Bad Deploy,Ariane 5,Commercial Operator,0.78,0.94,110,105,2,3,6500,GEO,SATELLITE_DEPLOYMENT,Geostationary Orbit,0,0.93,0,HIGH,HIGH,PARTIAL,payload deployment failure
+Storm Delay Probe,Falcon 9,Commercial Operator,0.66,0.95,280,270,2,8,900,LEO,SCIENCE,Low Earth Orbit,0,0.7,0,LOW,MEDIUM,PARTIAL,weather delay

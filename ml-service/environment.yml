@@ -1,0 +1,21 @@
+name: astravault-ml
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pandas
+  - numpy
+  - scikit-learn
+  - xgboost
+  - matplotlib
+  - seaborn
+  - jupyter
+  - pip
+  - pip:
+      - fastapi
+      - uvicorn
+      - joblib
+      - pydantic
+      - python-dotenv
+      - psycopg2-binary
